@@ -643,7 +643,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 			logger.debug("Validating message [" + soapMessage + "] with actions [" + validationActions + "]");
 		}
 
-		if (validationActionsVector.contains(WSConstants.NO_SECURITY)) {
+		if (validationActionsVector == null || validationActionsVector.isEmpty()
+				|| validationActionsVector.contains(WSConstants.NO_SECURITY)) {
 			return;
 		}
 
