@@ -73,31 +73,26 @@ public abstract class Wss4jTestCase {
 		saajSoap12MessageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
 		Map<String, String> namespaces = new HashMap<String, String>();
 		namespaces.put("SOAP-ENV", "http://schemas.xmlsoap.org/soap/envelope/");
-		namespaces.put("wsse",
-				"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd");
+		namespaces.put("wsse", "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd");
 		namespaces.put("ds", "http://www.w3.org/2000/09/xmldsig#");
 		namespaces.put("xenc", "http://www.w3.org/2001/04/xmlenc#");
 		namespaces.put("wsse11", "http://docs.oasis-open.org/wss/oasis-wss-wssecurity-secext-1.1.xsd");
 		namespaces.put("echo", "http://www.springframework.org/spring-ws/samples/echo");
-		namespaces.put("wsu",
-				"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd");
+		namespaces.put("wsu", "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd");
+		namespaces.put("saml2", "urn:oasis:names:tc:SAML:2.0:assertion");
 		namespaces.put("test", "http://test");
 		xpathTemplate.setNamespaces(namespaces);
 		onSetup();
 	}
 
-	protected void assertXpathEvaluatesTo(String message,
-										  String expectedValue,
-										  String xpathExpression,
-										  Document document) {
+	protected void assertXpathEvaluatesTo(String message, String expectedValue, String xpathExpression,
+			Document document) {
 		String actualValue = xpathTemplate.evaluateAsString(xpathExpression, new DOMSource(document));
 		Assert.assertEquals(message, expectedValue, actualValue);
 	}
 
-	protected void assertXpathEvaluatesTo(String message,
-										  String expectedValue,
-										  String xpathExpression,
-										  String document) {
+	protected void assertXpathEvaluatesTo(String message, String expectedValue, String xpathExpression,
+			String document) {
 		String actualValue = xpathTemplate.evaluateAsString(xpathExpression, new StringSource(document));
 		Assert.assertEquals(message, expectedValue, actualValue);
 	}
@@ -125,13 +120,13 @@ public abstract class Wss4jTestCase {
 		try {
 			assertTrue("Could not load SAAJ message [" + resource + "]", resource.exists());
 			is = resource.getInputStream();
-			return new SaajSoapMessage(saajSoap11MessageFactory.createMessage(mimeHeaders, is), saajSoap11MessageFactory);
-		}
-		finally {
+			return new SaajSoapMessage(saajSoap11MessageFactory.createMessage(mimeHeaders, is),
+					saajSoap11MessageFactory);
+		} finally {
 			is.close();
 		}
 	}
-	
+
 	protected SaajSoapMessage loadSaaj12Message(String fileName) throws Exception {
 		MimeHeaders mimeHeaders = new MimeHeaders();
 		mimeHeaders.addHeader("Content-Type", "application/soap+xml");
@@ -140,9 +135,9 @@ public abstract class Wss4jTestCase {
 		try {
 			assertTrue("Could not load SAAJ message [" + resource + "]", resource.exists());
 			is = resource.getInputStream();
-			return new SaajSoapMessage(saajSoap12MessageFactory.createMessage(mimeHeaders, is), saajSoap12MessageFactory);
-		}
-		finally {
+			return new SaajSoapMessage(saajSoap12MessageFactory.createMessage(mimeHeaders, is),
+					saajSoap12MessageFactory);
+		} finally {
 			is.close();
 		}
 	}
@@ -158,14 +153,13 @@ public abstract class Wss4jTestCase {
 			StAXSOAPModelBuilder builder = new StAXSOAPModelBuilder(parser, null);
 			org.apache.axiom.soap.SOAPMessage soapMessage = builder.getSoapMessage();
 			return new AxiomSoapMessage(soapMessage, "", true, true);
-		}
-		finally {
+		} finally {
 			is.close();
 		}
 	}
 
-	 @SuppressWarnings("Since15")
-	 protected AxiomSoapMessage loadAxiom12Message(String fileName) throws Exception {
+	@SuppressWarnings("Since15")
+	protected AxiomSoapMessage loadAxiom12Message(String fileName) throws Exception {
 		Resource resource = new ClassPathResource(fileName, getClass());
 		InputStream is = resource.getInputStream();
 		try {
@@ -173,11 +167,11 @@ public abstract class Wss4jTestCase {
 			is = resource.getInputStream();
 
 			XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(is);
-			StAXSOAPModelBuilder builder = new StAXSOAPModelBuilder(parser, SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI);
+			StAXSOAPModelBuilder builder = new StAXSOAPModelBuilder(parser,
+					SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI);
 			org.apache.axiom.soap.SOAPMessage soapMessage = builder.getSoapMessage();
 			return new AxiomSoapMessage(soapMessage, "", true, true);
-		}
-		finally {
+		} finally {
 			is.close();
 		}
 	}
@@ -249,7 +243,7 @@ public abstract class Wss4jTestCase {
 		messageFactory.setSoapVersion(SoapVersion.SOAP_12);
 		return messageFactory;
 	}
-	
+
 	protected Document getDocument(SoapMessage message) throws Exception {
 		if (axiomTest) {
 			return AxiomUtils.toDocument(((AxiomSoapMessage) message).getAxiomMessage().getSOAPEnvelope());
