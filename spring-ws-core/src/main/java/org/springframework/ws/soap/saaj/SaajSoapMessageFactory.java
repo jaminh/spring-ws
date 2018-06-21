@@ -35,6 +35,7 @@ import org.xml.sax.SAXParseException;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.InvalidXmlException;
 import org.springframework.ws.soap.SoapMessageCreationException;
@@ -288,6 +289,13 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
 		if (!CollectionUtils.isEmpty(messageProperties)) {
 			for (Map.Entry<String, ?> entry : messageProperties.entrySet()) {
 				soapMessage.setProperty(entry.getKey(), entry.getValue());
+			}
+		}
+		if (SOAPConstants.SOAP_1_1_PROTOCOL.equals(messageFactoryProtocol))
+		{
+			MimeHeaders headers = soapMessage.getMimeHeaders();
+			if (ObjectUtils.isEmpty(headers.getHeader(TransportConstants.HEADER_SOAP_ACTION))) {
+				headers.addHeader(TransportConstants.HEADER_SOAP_ACTION, "\"\"");
 			}
 		}
 	}
